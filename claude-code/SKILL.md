@@ -1,7 +1,7 @@
 ---
 name: worktree-spawn
-version: "1.0.0"
-description: Spawn parallel git worktrees with session context. Use when the user says "spawn worktree", "parallel workspace", "worktree spawn", "worktree list", "worktree finish", or wants to work on multiple tasks in parallel using git worktrees.
+version: "1.1.0"
+description: Spawn parallel git worktrees with session context. Use when the user says "spawn worktree", "parallel workspace", "worktree spawn", "worktree list", "worktree finish", or wants to work on multiple tasks in parallel using git worktrees. Supports subcommands via args: list, finish.
 user-invocable: true
 allowed-tools:
   - Read
@@ -22,8 +22,15 @@ Spawn parallel git worktrees with compact session context for concurrent AI-assi
 | Command | Description |
 |---------|-------------|
 | `/worktree-spawn "<task>"` | Compact context, create worktree, output spawn command |
-| `/worktree-list` | List all active parallel worktrees and their status |
-| `/worktree-finish [slug]` | Show diff summary, confirm, merge, cleanup |
+| `/worktree-spawn list` | List all active parallel worktrees and their status |
+| `/worktree-spawn finish [slug]` | Show diff summary, confirm, merge, cleanup |
+
+### Argument Parsing
+
+When invoked, check the first argument:
+- If the first arg is `list` → run the **`/worktree-spawn list`** flow below
+- If the first arg is `finish` → run the **`/worktree-spawn finish`** flow below (optional second arg is the slug)
+- Otherwise → treat the entire argument string as a task description and run the **spawn** flow
 
 ## How It Works
 
@@ -147,7 +154,7 @@ Clean up the temporary `.worktree-snapshot.md` from the main worktree after copy
 
 ---
 
-## `/worktree-list` Flow
+## `/worktree-spawn list` Flow
 
 1. Read `.worktrees.json` from the current project root.
 2. For each entry with `status: "active"`, check if the worktree still exists (`test -d <path>`).
@@ -161,9 +168,9 @@ Clean up the temporary `.worktree-snapshot.md` from the main worktree after copy
 
 ---
 
-## `/worktree-finish` Flow
+## `/worktree-spawn finish` Flow
 
-When the user invokes `/worktree-finish [slug]`:
+When the user invokes `/worktree-spawn finish [slug]`:
 
 ### Step 1: Select Worktree
 
