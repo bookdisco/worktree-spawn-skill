@@ -39,3 +39,5 @@ git diff --shortstat "HEAD...${BRANCH}" 2>/dev/null || true
 echo ""
 echo "CONFIRM: Review the above and confirm merge."
 echo "To proceed, run: git merge --no-ff '${BRANCH}' -m 'merge: worktree ${SLUG}'"
+echo "Then clean up:   git branch -d '${BRANCH}'"
+echo "When ready:      git worktree remove '${WORKTREE_DIR}'"

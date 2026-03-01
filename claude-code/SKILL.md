@@ -1,6 +1,6 @@
 ---
 name: worktree-spawn
-version: "1.1.0"
+version: "1.1.1"
 description: Spawn parallel git worktrees with session context. Use when the user says "spawn worktree", "parallel workspace", "worktree spawn", "worktree list", "worktree finish", or wants to work on multiple tasks in parallel using git worktrees. Supports subcommands via args: list, finish.
 user-invocable: true
 allowed-tools:
@@ -201,15 +201,20 @@ If there are conflicts, inform the user and help resolve them interactively. Do 
 
 ### Step 4: Cleanup
 
-After successful merge:
+After successful merge, **delete the branch but do NOT remove the worktree directory** — let the user do it:
 
 ```bash
-# Remove the worktree
-git worktree remove "../${PROJECT}-wt-${SLUG}"
-
-# Delete the branch
+# Delete the branch (safe — already merged)
 git branch -d "wt/${SLUG}"
 ```
+
+Tell the user:
+```
+Merged and branch deleted. When you're done, clean up the worktree directory:
+  git worktree remove "../${PROJECT}-wt-${SLUG}"
+```
+
+**Do NOT run `git worktree remove` automatically.** It deletes the directory, which breaks any Claude Code / Codex session still running inside it.
 
 ### Step 5: Update Registry
 
@@ -225,6 +230,7 @@ Update the entry in `.worktrees.json`:
 - **Branch already exists**: If `wt/<slug>` already exists, ask user whether to reuse or pick a different name.
 - **Worktree path conflict**: If the directory already exists, check if it's a valid worktree or stale. Offer to clean up stale ones.
 - **Merge conflicts**: During `/worktree-finish`, if merge conflicts arise, show the conflicting files and help the user resolve them. Never auto-resolve.
+- **Active session in worktree**: Never auto-remove worktree directories. `git worktree remove` deletes the directory, which breaks any session running inside it. Always leave removal to the user.
 - **Missing git**: If not in a git repository, inform the user that this skill requires git.
 
 ## Files
