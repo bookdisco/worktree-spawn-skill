@@ -94,7 +94,7 @@ git worktree add "../${PROJECT}-wt-${SLUG}" "wt/${SLUG}"
 
 If the worktree already exists, inform the user and ask whether to reuse or recreate.
 
-### Step 3: Copy Snapshot and Add Context Loader Files
+### Step 3: Copy Snapshot and Append Worktree Context
 
 ```bash
 WORKTREE="../${PROJECT}-wt-${SLUG}"
@@ -103,7 +103,11 @@ WORKTREE="../${PROJECT}-wt-${SLUG}"
 cp .worktree-snapshot.md "${WORKTREE}/.worktree-snapshot.md"
 ```
 
-Append this block to `AGENTS.md` in the new worktree (create if missing):
+The new worktree already contains the project's existing `AGENTS.md` and `CLAUDE.md` (inherited from the git checkout). **Append** the following block to the end of each file — do NOT overwrite or replace existing content. If a file doesn't exist, create it with just this block.
+
+Use the Edit tool to append (not Write, which overwrites).
+
+Append to `AGENTS.md` (create if missing):
 
 ```markdown
 ## Worktree Context
@@ -116,7 +120,7 @@ This is a spawned worktree for parallel work. Before doing anything:
 5. When done, commit your changes. The parent workspace will merge via `/worktree-finish`.
 ```
 
-If `CLAUDE.md` exists in the new worktree, append the same block there for Claude sessions.
+If `CLAUDE.md` exists in the new worktree, append the same block to it for Claude sessions.
 
 ### Step 4: Update Worktree Registry
 

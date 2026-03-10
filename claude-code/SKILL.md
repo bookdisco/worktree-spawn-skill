@@ -84,19 +84,18 @@ git worktree add "../${PROJECT}-wt-${SLUG}" "wt/${SLUG}"
 
 If the worktree already exists, inform the user and ask whether to reuse or recreate.
 
-### Step 3: Copy Snapshot and Hook CLAUDE.md
+### Step 3: Copy Snapshot and Append Worktree Context to CLAUDE.md
 
 ```bash
 WORKTREE="../${PROJECT}-wt-${SLUG}"
 
 # Copy snapshot
 cp .worktree-snapshot.md "${WORKTREE}/.worktree-snapshot.md"
-
-# Append context-loading instruction to CLAUDE.md in the new worktree
-# If CLAUDE.md exists, append. If not, create.
 ```
 
-Add this block to the new worktree's `CLAUDE.md`:
+The new worktree already contains the project's existing CLAUDE.md (inherited from the git checkout). **Append** the following block to the end of the existing CLAUDE.md — do NOT overwrite or replace it. If CLAUDE.md doesn't exist, create it with just this block.
+
+Use the Edit tool to append (not Write, which overwrites):
 
 ```markdown
 ## Worktree Context
